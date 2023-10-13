@@ -3,10 +3,9 @@ const { campgroundSchema, reviewSchema } = require("../schemas");
 const Campground = require('../models/campground');
 const Review = require("../models/review");
 
-
 module.exports.isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
-        req.session.returnTo = req.originalUrl;
+        req.session.returnTo = req.originalUrl; //store the url before to be redirected
         req.flash('success', 'you must be logged in');
         return res.redirect('/login')
     }
@@ -30,6 +29,7 @@ module.exports.isAuthor = async (req, res, next) => {
     }
     next()
 }
+
 module.exports.isReviewAuthor = async (req, res, next) => {
     const { id, reviewId } = req.params
     const review = await Review.findById(reviewId);

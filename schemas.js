@@ -22,6 +22,8 @@ const extension = (joi) => ({
     }
 });
 
+//define new rules and extend the basic joy
+
 const Joi = BaseJoi.extend(extension)
 
 module.exports.campgroundSchema = Joi.object({

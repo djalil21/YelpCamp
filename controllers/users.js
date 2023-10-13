@@ -8,8 +8,8 @@ module.exports.register = async (req, res) => {
     try {
         const { username, email, password } = req.body
         const user = new User({ username, email })
-        const createdUser = await User.register(user, password)
-        req.login(createdUser, err => {
+        const createdUser = await User.register(user, password) //register setted by plugin
+        req.login(createdUser, err => { //login setted by passport
             if (err) return next(err)
             req.flash('success', `user ${username} created succesfully`)
             res.redirect('/campgrounds')
@@ -33,6 +33,7 @@ module.exports.login = (req, res) => {
 }
 
 module.exports.logout = (req, res, next) => {
+    //logout setted by passport
     req.logout(err => {
         if (err) {
             return next(err)

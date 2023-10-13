@@ -11,7 +11,7 @@ router.route('/register')
 router.route('/login')
     .get(users.renderLogin)
     .post(
-        storeReturnTo,
+        storeReturnTo, //returnto URL that is stored in session get deleted by authenticate
         passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }),
         users.login)
 

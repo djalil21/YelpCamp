@@ -8,16 +8,17 @@ const ImageSchema = new Schema({
 })
 
 ImageSchema.virtual('thumbnail').get(function () {
-    return this.url.replace('/upload', '/upload/w_200');
+    return this.url.replace('/upload', '/upload/w_200'); //url to get 200px picture for thumbnail
 })
 
-const opts = {toJSON: {virtuals:true}}
+const opts = {toJSON: {virtuals:true}} //make virtual appear when sending data in json format
 
 const CampgroundSchema = new Schema({
     title: String,
     price: Number,
     description: String,
     location: String,
+    //geojson standard
     geometry: {
         type: {
             type: String, // Don't do `{ location: { type: String } }`
@@ -44,6 +45,7 @@ const CampgroundSchema = new Schema({
 
 
 CampgroundSchema.virtual('properties.popUpMarkup').get(function () {
+    //popup in the map, make XSS vunerability, fixed by HTML sanitize
     return `<strong><a href="/campgrounds/${this._id}">${this.title}</a></strong><p>${this.location}</p>`
 })
 

@@ -9,19 +9,19 @@ module.exports.index = async (req, res) => {
     res.render("campgrounds/index", { campgrounds });
 }
 
-
 module.exports.renderNewForm = (req, res) => {
-
     res.render('campgrounds/new');
 }
 
 module.exports.createCampground = async (req, res) => {
+    // get geocode by the name of location 
     const geoData = await geocoder.forwardGeocode({
         query: req.body.campground.location,
         limit: 1
     }).send()
+
     const campground = new Campground(req.body?.campground);
-    campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
+    campground.images = req.files.map(f => ({ url: f.path, filename: f.filename })); //req.files by multer
     campground.author = req.user._id;
     campground.geometry = geoData.body.features[0].geometry
     await campground.save();
@@ -37,7 +37,7 @@ module.exports.showCampground = async (req, res) => {
             populate: {
                 path: 'author'
             }
-        }).populate('author')
+        }).populate('author') //populate with author of campground, and with reviews and its author
     if (!campground) {
         req.flash('error', 'Cannot find that campground!')
         return res.redirect('/campgrounds')
@@ -65,7 +65,7 @@ module.exports.editCampground = async (req, res) => {
         for (const filename of req.body.deletedImages) {
             await cloudinary.uploader.destroy(filename)
         }
-        await newCampground.updateOne({ $pull: { images: { filename: { $in: req.body.deletedImages } } } })
+        await newCampground.updateOne({ $pull: { images: { filename: { $in: req.body.deletedImages } } } }) //pull filename from images array when it's in deleted images
     }
     req.flash('success', 'updated campground')
     res.redirect(`/campgrounds/${newCampground._id}`)
